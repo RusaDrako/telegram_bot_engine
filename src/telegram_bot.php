@@ -113,6 +113,17 @@ class telegram_bot {
 
 
 
+	/** Возвращает объект метода */
+	public function object($object_name) {
+		$class_name = __NAMESPACE__ . "\\object\\{$object_name}";
+		$obj = (new $class_name())->set_bot($this);
+		return $obj;
+	}
+
+
+
+
+
 	/** Добавление токена в строку */
 	public function insert_token($str) {
 		$str = $this->link . \str_replace(':bot-token:', $this->token, $str);

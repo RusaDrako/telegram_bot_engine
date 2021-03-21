@@ -3,13 +3,13 @@
 namespace RusaDrako\telegram_bot_engine\method;
 
 /**
- * 
+ *
  */
 class getUpdates extends _object_method {
 
 
 
-	/** Подготовка данных сообщения */
+	/** Задаёт настройки объекта */
 	protected function set_method() {
 		$this->command = 'getUpdates';
 		$this->class_result = 'Update';

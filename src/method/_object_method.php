@@ -17,6 +17,8 @@ class _object_method {
 	protected $class_result = null;
 	protected $array_result = false;
 
+	protected $_required = [];
+
 
 
 
@@ -40,7 +42,28 @@ class _object_method {
 
 
 
-	/** Подготовка данных сообщения */
+	/** Задаёт обязательный параметр запроса */
+	protected function _add_required($name) {
+		$this->_required[$name] = $name;
+	}
+
+
+
+	/** Проверяет обязательные параметры запроса */
+	protected function _control_required($post) {
+		foreach ($this->_required as $k => $v) {
+			if (!isset($post[$k])) {
+				return false;
+			}
+		}
+var_dump($this->_required);
+var_dump($post);
+		return true;
+	}
+
+
+
+	/** Добавляет данные в запрос */
 	protected function _add_post_data($name, $value) {
 		if ($value === null) {
 			unset($this->post_data[$name]);
@@ -51,20 +74,37 @@ class _object_method {
 
 
 
-	/** Подготовка данных сообщения */
+	/** Добавляет данные в запрос */
+	protected function _add_post_data_array($name, $value) {
+		if ($value !== null) {
+			$this->post_data[$name][] = $value;
+		}
+	}
+
+
+
+	/** Выполняет запрос */
 	final public function execute() {
 		$this->set_method();
 		$post = $this->_get_post();
+		if (!$this->_control_required($post)) {
+			echo '<pre>';
+			print_r($post);
+			echo '<hr>';
+			print_r($this->_required);
+			throw new \Exception("Заданы не все необходимые параметры запроса: " . \get_called_class() . "->{$name}");
+		}
 		if ($this->array_result) {
 			$result = $this->_request_arr($this->command, $this->class_result, $post);
 		} else {
 			$result = $this->_request_obj($this->command, $this->class_result, $post);
 		}
-//		$this->_info($result, __METHOD__);
 		return $result;
 	}
 
 
+	/** Задаёт настройки объекта */
+	protected function set_method() {}
 
 /**/
 }
