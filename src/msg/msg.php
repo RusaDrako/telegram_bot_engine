@@ -7,9 +7,6 @@ namespace RusaDrako\telegram_bot_engine\msg;
  */
 class msg extends _object_msg {
 
-	/** Выводит информацию */
-//	use trait__info;
-
 
 
 	private $bot = null;
@@ -20,6 +17,7 @@ class msg extends _object_msg {
 	private $video = null;
 	private $document = null;
 	private $keyboard = null;
+	private $parse_mode = null;
 
 
 
@@ -39,6 +37,7 @@ class msg extends _object_msg {
 	/** Привязываем бот */
 	public function set_bot($bot) {
 		$this->bot = $bot;
+		return $this;
 	}
 
 
@@ -54,6 +53,22 @@ class msg extends _object_msg {
 	/** Добавляет сообщение */
 	function msg($text) {
 		$this->msg = $text;
+		return $this;
+	}
+
+
+
+	/** Тип оформления: markdown */
+	function markdown() {
+		$this->parse_mode = 'Markdown';
+		return $this;
+	}
+
+
+
+	/** Тип оформления: markdown */
+	function html() {
+		$this->parse_mode = 'HTML';
 		return $this;
 	}
 
@@ -134,6 +149,10 @@ class msg extends _object_msg {
 			];
 			$arr['reply_markup'] = json_encode($keyboard);
 		}/**/
+		if ($this->parse_mode) {
+			$arr['parse_mode'] = $this->parse_mode;
+		}/**/
+
 		return [$command, $arr];
 	}
 
