@@ -46,10 +46,10 @@ class telegram_bot {
 
 
 	/** */
-	public function _curl($command, $post = [], $result = null) {
-		if ($result === null) {
-			$result = new result\result();
-		}
+	public function _curl($command, $post = []/*, $result = null*/) {
+/*		if ($result === null) {
+			$result = (new result\result())->set_bot($this->bot);
+		}/**/
 		# Запускай curl
 		$curl = curl_init();
 		# Формируем
@@ -93,8 +93,8 @@ class telegram_bot {
 
 	/** Возвращает объект сообщения */
 	public function msg() {
-		$obj = new msg\msg();
-		$obj->set_bot($this);
+		$obj = (new msg\msg())->set_bot($this->bot);
+//		$obj->set_bot($this);
 		return $obj;
 	}
 
@@ -102,21 +102,10 @@ class telegram_bot {
 
 
 
-	/* * Возвращает объект setup */
-	public function method() {
-		$obj = new method\method();
-		$obj->set_bot($this);
-		return $obj;
-	}
-
-
-
-
-
-	/** Возвращает объект setup */
-	public function webhook() {
-		$obj = new method\Webhook();
-		$obj->set_bot($this);
+	/** Возвращает объект метода */
+	public function method($method_name) {
+		$class_name = __NAMESPACE__ . "\\method\\{$method_name}";
+		$obj = (new $class_name())->set_bot($this);
 		return $obj;
 	}
 

@@ -10,7 +10,7 @@ class result extends _object_result {
 
 
 	/** */
-	function add_setting() {
+	protected function add_setting() {
 		$this->set('ok',              'bool');   # Запрос удачный
 		$this->set('error_code',      'int');   # Опционально. Код ошибки
 		$this->set('description',     'str');   # Опционально. Описание ошибки
@@ -22,7 +22,7 @@ class result extends _object_result {
 
 
 	/** */
-	public function result_type_obj($type = 'User') {
+	public function result_type_obj($type) {
 		$this->set_obj('result',  $type);   # Результат запроса
 		return $this;
 	}
@@ -32,7 +32,7 @@ class result extends _object_result {
 
 
 	/** */
-	public function result_type_arr($type = 'Message') {
+	public function result_type_arr($type) {
 		$this->set_arr('result',  $type);   # Результат запроса
 		return $this;
 	}

@@ -10,7 +10,7 @@ class File extends _object_result {
 
 
 	/** */
-	function add_setting() {
+	protected function add_setting() {
 		$this->set('file_id',          'str');   # Уникальный идентификатор файла
 		$this->set('file_unique_id',   'str');   # Уникальный идентификатор этого файла, который должен быть одинаковым с течением времени и для разных ботов. Невозможно использовать для загрузки или повторного использования файла.
 		$this->set('file_size',        'int');   # Опционально. Размер файла, если известен

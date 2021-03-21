@@ -10,7 +10,7 @@ class MessageId extends _object_result {
 
 
 	/** */
-	function add_setting() {
+	protected function add_setting() {
 		$this->set('message_id',                'int');   # Уникальный идентификатор сообщения
 	}
 

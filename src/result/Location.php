@@ -10,7 +10,7 @@ class Location extends _object_result {
 
 
 	/** */
-	function add_setting() {
+	protected function add_setting() {
 		$this->set('longitude',                'float');   # Долгота, заданная отправителем
 		$this->set('latitude',                 'float');   # Широта, заданная отправителем
 		$this->set('horizontal_accuracy',      'float');   # Опционально. Радиус неопределенности местоположения, измеряемый в метрах; 0-1500

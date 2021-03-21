@@ -7,7 +7,7 @@ namespace RusaDrako\telegram_bot_engine\result;
  */
 class _object_result {
 
-//	protected $bot = null;
+	protected $bot = null;
 	private $data = [];
 	private $data_filter = [];
 	private $filter = [];
@@ -33,11 +33,10 @@ class _object_result {
 	}
 
 
-	/** * /
+	/** */
 	final public function set_bot($bot) {
-	/*echo get_called_class();
-	echo '<br>';* /
 		$this->bot = $bot;
+		return $this;
 	}
 
 
@@ -174,7 +173,7 @@ class _object_result {
 			$obj = $this->obj[$name];
 			if ($obj === null) {
 				$class_name = $this->obj_name[$name];
-				$this->obj[$name] = new $class_name();
+				$this->obj[$name] = (new $class_name())->set_bot($this->bot);
 //				$this->obj[$name]->set_bot($this->bot);
 			}
 			$this->obj[$name]->set_data($value);
@@ -185,7 +184,7 @@ class _object_result {
 				$class_name = $this->arr_name[$name];
 			}
 			foreach($value as $k => $v) {
-				$obj = new $class_name();
+				$obj = (new $class_name())->set_bot($this->bot);
 //				$obj->set_bot($this->bot);
 				$obj->set_data($v);
 				$this->arr[$name][] = $obj;
@@ -205,7 +204,7 @@ class _object_result {
 
 
 
-	/** Фильтр информации * /
+	/** Фильтр информации */
 	protected function filter($name, $value) {
 		return $value;
 	}

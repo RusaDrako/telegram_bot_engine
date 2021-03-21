@@ -10,7 +10,7 @@ class User extends _object_result {
 
 
 	/** https://core.telegram.org/bots/api#chat */
-	function add_setting() {
+	protected function add_setting() {
 		$this->set('id',                            'int');    # Уникальный идентификатор пользователя или бота
 		$this->set('is_bot',                        'bool');   # True, если это бот
 		$this->set('first_name',                    'str');    # Имя бота или пользователя

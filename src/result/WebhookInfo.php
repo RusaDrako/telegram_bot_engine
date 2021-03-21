@@ -10,7 +10,7 @@ class WebhookInfo extends _object_result {
 
 
 	/** https://core.telegram.org/bots/api#chat */
-	function add_setting() {
+	protected function add_setting() {
 		$this->set('url',                      'str');    # URL-адрес веб-перехватчика, может быть пустым, если веб-перехватчик не настроен
 		$this->set('has_custom_certificate',   'bool');   # True, если для проверки сертификата веб-перехватчика был предоставлен настраиваемый сертификат
 		$this->set('pending_update_count',     'int');    # Целое число Количество обновлений, ожидающих доставки

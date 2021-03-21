@@ -10,7 +10,7 @@ class Contact extends _object_result {
 
 
 	/** */
-	function add_setting() {
+	protected function add_setting() {
 		$this->set('phone_number',   'str');   # Телефон контакта
 		$this->set('first_name',     'str');   # Имя контакта
 		$this->set('last_name',      'str');   # Опционально. Фамилия контакта

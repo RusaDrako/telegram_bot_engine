@@ -8,7 +8,7 @@ namespace RusaDrako\telegram_bot_engine\result;
 class Chat extends _object_result {
 
 	/** https://tlgrm.ru/docs/bots/api#chat */
-	function add_setting() {
+	protected function add_setting() {
 		$this->set('id',                    'int');   # Уникальный идентификатор чата. Абсолютное значение не превышает 1e13
 		$this->set('type',                  'str');   # Тип чата: “private”, “group”, “supergroup” или “channel”
 		$this->set('title',                 'str');   # Опционально. Название, для каналов или групп

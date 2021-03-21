@@ -10,7 +10,7 @@ class Venue extends _object_result {
 
 
 	/** */
-	function add_setting() {
+	protected function add_setting() {
 		$this->set_obj('location',        'Location');   # Место проведения. Не может быть живым местом
 		$this->set('title',               'str');   # Название места проведения
 		$this->set('address',             'str');   # Адрес места проведения

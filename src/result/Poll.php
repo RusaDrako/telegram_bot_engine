@@ -10,7 +10,7 @@ class Poll extends _object_result {
 
 
 	/** */
-	function add_setting() {
+	protected function add_setting() {
 		$this->set('id',                'str');   # Уникальный идентификатор опроса
 		$this->set('question',          'str');   # Вопрос для опроса, 1-300 знаков
 		$this->set_arr('options',       'PollOption');   # Список опций опроса
