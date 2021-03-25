@@ -28,6 +28,15 @@ class telegram_bot {
 
 
 	/** */
+	public function getBotName() {
+		return $this->name;
+	}
+
+
+
+
+
+	/** */
 	public function set_test($value) {
 		$this->test = (bool) $value;
 	}
