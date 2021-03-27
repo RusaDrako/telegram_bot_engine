@@ -56,8 +56,6 @@ class _object_method {
 				return false;
 			}
 		}
-var_dump($this->_required);
-var_dump($post);
 		return true;
 	}
 
