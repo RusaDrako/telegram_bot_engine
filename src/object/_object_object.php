@@ -5,7 +5,7 @@ namespace RusaDrako\telegram_bot_engine\object;
 /**
  *
  */
-class _object_object {
+class _object_object implements \JsonSerializable {
 
 	protected $bot = null;
 	private $data = [];
@@ -93,6 +93,16 @@ class _object_object {
 
 	/** Подготовка данных к var_dump() */
 	public function __debugInfo() {
+		$arr = $this->__preparationData([]);
+		return $arr;
+	}
+
+
+
+
+
+	/** Задаёт данные, которые должны быть сериализованы в JSON */
+	public function jsonSerialize() {
 		$arr = $this->__preparationData([]);
 		return $arr;
 	}
