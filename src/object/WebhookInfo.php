@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет бота или пользователя Telegram.
  */
-class WebhookInfo extends _object_result {
+class WebhookInfo extends _object_object {
 
 
 

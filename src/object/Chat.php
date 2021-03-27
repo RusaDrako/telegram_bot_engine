@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет собой чат.
  */
-class Chat extends _object_result {
+class Chat extends _object_object {
 
 	/** https://tlgrm.ru/docs/bots/api#chat */
 	protected function add_setting() {

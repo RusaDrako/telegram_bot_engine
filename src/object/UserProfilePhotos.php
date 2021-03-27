@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * 
  */
-class UserProfilePhotos extends _object_result {
+class UserProfilePhotos extends _object_object {
 
 
 

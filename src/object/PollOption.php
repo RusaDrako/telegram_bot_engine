@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект содержит информацию об одном варианте ответа в опросе.
  */
-class PollOption extends _object_result {
+class PollOption extends _object_object {
 
 
 

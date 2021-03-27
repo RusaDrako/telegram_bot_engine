@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет собой уникальный идентификатор сообщения. 
  */
-class MessageId extends _object_result {
+class MessageId extends _object_object {
 
 
 

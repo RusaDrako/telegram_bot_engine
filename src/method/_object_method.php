@@ -7,7 +7,7 @@ namespace RusaDrako\telegram_bot_engine\method;
  */
 class _object_method {
 
-	use _trait__request;
+	use _trait__response;
 
 	protected $bot = null;
 

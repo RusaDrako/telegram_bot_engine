@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет собой место проведения.
  */
-class Venue extends _object_result {
+class Venue extends _object_object {
 
 
 

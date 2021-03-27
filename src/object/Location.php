@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет точку на карте.
  */
-class Location extends _object_result {
+class Location extends _object_object {
 
 
 

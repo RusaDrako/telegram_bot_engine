@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  *
  */
-class _object_result {
+class _object_object {
 
 	protected $bot = null;
 	private $data = [];

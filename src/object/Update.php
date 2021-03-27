@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  *
  */
-class Update extends _object_result {
+class Update extends _object_object {
 
 
 

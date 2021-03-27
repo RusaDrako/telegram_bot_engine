@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет собой сообщение.
  */
-class Message extends _object_result {
+class Message extends _object_object {
 
 
 

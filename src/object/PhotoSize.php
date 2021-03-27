@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет изображение определённого размера или превью файла / стикера.
  */
-class PhotoSize extends _object_result {
+class PhotoSize extends _object_object {
 
 	use _trait__file;
 

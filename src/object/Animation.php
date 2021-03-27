@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет собой файл анимации (видео в формате GIF или H.264 / MPEG-4 AVC без звука).
  */
-class Animation extends _object_result {
+class Animation extends _object_object {
 
 	use _trait__file;
 

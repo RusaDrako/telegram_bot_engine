@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет контакт с номером телефона.
  */
-class Contact extends _object_result {
+class Contact extends _object_object {
 
 
 

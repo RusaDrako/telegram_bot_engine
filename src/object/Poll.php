@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект содержит информацию об опросе.
  */
-class Poll extends _object_result {
+class Poll extends _object_object {
 
 
 

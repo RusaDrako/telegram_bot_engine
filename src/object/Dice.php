@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет собой анимированный смайлик, отображающий случайное значение.
  */
-class Dice extends _object_result {
+class Dice extends _object_object {
 
 
 

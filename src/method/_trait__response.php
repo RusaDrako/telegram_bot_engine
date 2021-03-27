@@ -5,7 +5,7 @@ namespace RusaDrako\telegram_bot_engine\method;
 /**
  *
  */
-trait _trait__request {
+trait _trait__response {
 
 
 
@@ -24,7 +24,7 @@ trait _trait__request {
 	/** */
 	protected function _request_obj($command, $class, $post = []) {
 		$_result = $this->_request($command, $post);
-		$result = (new \RusaDrako\telegram_bot_engine\result\result())->set_bot($this->bot);
+		$result = (new \RusaDrako\telegram_bot_engine\object\response())->set_bot($this->bot);
 //		$result->set_bot($this->bot);
 		$result->result_type_obj($class);
 		$result->set_data($_result);
@@ -38,7 +38,7 @@ trait _trait__request {
 	/** */
 	protected function _request_arr($command, $class, $post = []) {
 		$_result = $this->_request($command, $post);
-		$result = (new \RusaDrako\telegram_bot_engine\result\result())->set_bot($this->bot);
+		$result = (new \RusaDrako\telegram_bot_engine\object\response())->set_bot($this->bot);
 //		$result->set_bot($this->bot);
 		$result->result_type_arr($class);
 		$result->set_data($_result);

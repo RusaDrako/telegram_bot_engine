@@ -1,6 +1,6 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 
 
@@ -30,7 +30,7 @@ function autoload($dir, array $exclusion = []) {
 
 # Эти файлы загружаем первыми
 require_once(__DIR__ .'/_trait__file.php');
-require_once(__DIR__ . '/_object_result.php');
+require_once(__DIR__ . '/_object_object.php');
 
 # Автозагрузчик
 autoload(__DIR__);

@@ -1,11 +1,11 @@
 <?php
 
-namespace RusaDrako\telegram_bot_engine\result;
+namespace RusaDrako\telegram_bot_engine\object;
 
 /**
  * Этот объект представляет собой одну особую сущность в текстовом сообщении. Например, хэштеги, имена пользователей, URL-адреса и т.д.
  */
-class MessageEntity extends _object_result {
+class MessageEntity extends _object_object {
 
 
 
