@@ -111,7 +111,7 @@ class msg extends _object_msg {
 	/** Формирует и отправляет сообщение */
 	public function send() {
 		list($command, $post) = $this->_generation();
-		$this->bot->_curl($command, $post);
+		return $this->bot->_curl($command, $post);
 	}
 
 
@@ -144,7 +144,7 @@ class msg extends _object_msg {
 			$keyboard_type = $this->keyboard->getType();
 			$keyboard = [
 				"{$keyboard_type}" => $this->keyboard,
-				"one_time_keyboard" => true, // можно заменить на FALSE,клавиатура скроется после нажатия кнопки автоматически при True
+				"one_time_keyboard" => false, // можно заменить на FALSE,клавиатура скроется после нажатия кнопки автоматически при True
 				"resize_keyboard" => true // можно заменить на FALSE, клавиатура будет использовать компактный размер автоматически при True
 			];
 			$arr['reply_markup'] = json_encode($keyboard);

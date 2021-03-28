@@ -8,13 +8,15 @@ namespace RusaDrako\telegram_bot_engine\object;
 class _object_object implements \JsonSerializable {
 
 	protected $bot = null;
-	private $data = [];
-	private $data_filter = [];
+	private $_data = [];
+	private $_data_filter = [];
 	private $filter = [];
 	private $obj = [];
 	private $obj_name = [];
 	private $arr = [];
 	private $arr_name = [];
+	private $arr_arr = [];
+	private $arr_arr_name = [];
 
 
 
@@ -28,6 +30,7 @@ class _object_object implements \JsonSerializable {
 		$this->filter['str'] = function ($v) {return (String)$v;};
 		$this->filter['bool'] = function ($v) {return (bool)$v;};
 		$this->filter['date'] = function ($v) {return date('Y-m-d H:s:i', $v);};
+		$this->filter['true'] = function ($v) {return true;};
 //		$this->_info($this->filter);
 		$this->add_setting();
 	}
@@ -43,8 +46,8 @@ class _object_object implements \JsonSerializable {
 
 	/** */
 	final protected function set($name, $filter = 'def') {
-		$this->data[$name] = null;
-		$this->data_filter[$name] = $filter;
+		$this->_data[$name] = null;
+		$this->_data_filter[$name] = $filter;
 	}
 
 
@@ -73,6 +76,20 @@ class _object_object implements \JsonSerializable {
 		$obj_name = __NAMESPACE__ . '\\' . $obj_name;
 		$this->arr[$name] = null;
 		$this->arr_name[$name] = $obj_name;
+	}
+
+
+
+
+
+	/** */
+	final protected function set_arr_arr($name, $obj_name = null) {
+		if($obj_name === null) {
+			$obj_name = $name;
+		}
+		$obj_name = __NAMESPACE__ . '\\' . $obj_name;
+		$this->arr_arr[$name] = null;
+		$this->arr_arr_name[$name] = $obj_name;
 	}
 
 
@@ -119,7 +136,8 @@ class _object_object implements \JsonSerializable {
 			$this->obj,
 			$this->arr,
 		];/**/
-		foreach ($this->data as $k => $v) {
+//var_dump($this->_data);
+		foreach ($this->_data as $k => $v) {
 			if ($v === null) { continue; }
 			$arr[$k] = $v;
 		}
@@ -135,6 +153,12 @@ class _object_object implements \JsonSerializable {
 				$arr[$k] = $v;
 			}
 		}
+		if ($this->arr_arr) {
+			foreach ($this->arr_arr as $k => $v) {
+				if ($v === null) { continue; }
+				$arr[$k] = $v;
+			}
+		}
 		return $arr;
 	}
 
@@ -144,8 +168,8 @@ class _object_object implements \JsonSerializable {
 
 	/** */
 	final public function __get($name) {
-		if (array_key_exists($name, $this->data)) {
-			return $this->data[$name];
+		if (array_key_exists($name, $this->_data)) {
+			return $this->_data[$name];
 		}
 		if (array_key_exists($name, $this->obj)) {
 			return $this->obj[$name];
@@ -153,8 +177,11 @@ class _object_object implements \JsonSerializable {
 		if (array_key_exists($name, $this->arr)) {
 			return $this->arr[$name];
 		}
+		if (array_key_exists($name, $this->arr_arr)) {
+			return $this->arr_arr[$name];
+		}
 		echo '<pre>';
-		print_r($this->data);
+		print_r($this->_data);
 		print_r($this->obj);
 //		print_r($this->obj_name);
 		print_r($this->arr);
@@ -168,15 +195,19 @@ class _object_object implements \JsonSerializable {
 
 	/** */
 	final public function __set($name, $value) {
-		if (array_key_exists($name, $this->data)) {
+		if (array_key_exists($name, $this->_data)) {
 //			$value = $this->filter($name, $value);
 //			print_r($name);
 //			print_r($value);
-//			print_r($this->data_filter[$name]);
+//			print_r($this->_data_filter[$name]);
 //			print_r($this->filter);
-			$filter_name = $this->data_filter[$name];
+			$filter_name = $this->_data_filter[$name];
 			$filter = $this->filter[$filter_name];
-			$this->data[$name] = $filter($value);
+//echo \get_called_class() . ' - ';
+//echo $name . ' - ';
+//var_dump($value);
+//echo '<br>';
+			$this->_data[$name] = $filter($value);
 			return;
 		}
 		if (array_key_exists($name, $this->obj)) {
@@ -201,8 +232,23 @@ class _object_object implements \JsonSerializable {
 			}
 			return;
 		}
+		if (array_key_exists($name, $this->arr_arr)) {
+			if ($this->arr_arr[$name] === null) {
+				$class_name = $this->arr_arr_name[$name];
+			}
+//print_info($this->arr_arr_name[$name], '$name');
+			foreach($value as $k => $v) {
+				foreach($v as $k_2 => $v_2) {
+					$obj = (new $class_name())->set_bot($this->bot);
+	//				$obj->set_bot($this->bot);
+					$obj->set_data($v_2);
+					$this->arr_arr[$name][$k][$k_2] = $obj;
+				}
+			}
+			return;
+		}
 		echo '<pre>';
-		print_r($this->data);
+		print_r($this->_data);
 		print_r($this->obj);
 //		print_r($this->obj_name);
 		print_r($this->arr);

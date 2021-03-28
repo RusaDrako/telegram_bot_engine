@@ -8,7 +8,7 @@ namespace RusaDrako\telegram_bot_engine\msg;
 class keyboard extends _object_msg {
 
 	protected $data = [];
-	protected $type = 'inline_keyboard';
+	protected $type = 'keyboard';
 
 
 

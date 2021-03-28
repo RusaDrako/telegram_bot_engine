@@ -63,7 +63,7 @@ class Message extends _object_object {
 		$this->set('connected_website',         'str');   # Опционально. Доменное имя веб-сайта, на котором пользователь вошел в систему. Подробнее о входе в Telegram
 //-		$this->set_obj('passport_data',         'PassportData');   # Опционально. Данные Telegram Passport
 //-		$this->set_obj('proximity_alert_triggered',   'ProximityAlertTriggered');   # Опционально. Сервисное сообщение. Пользователь в чате инициировал оповещение о близости другого пользователя, когда делился своим местоположением в реальном времени.
-//-		$this->set_obj('reply_markup',          'InlineKeyboardMarkup');   # Опционально. Встроенная клавиатура, прикрепленная к сообщению. Кнопки login_url представлены как обычные кнопки url.
+		$this->set_obj('reply_markup',          'InlineKeyboardMarkup');   # Опционально. Встроенная клавиатура, прикрепленная к сообщению. Кнопки login_url представлены как обычные кнопки url.
 	}
 
 
