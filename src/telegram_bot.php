@@ -88,7 +88,7 @@ class telegram_bot {
 		curl_close($curl);
 		# Декодируем результат
 		$arr_result = \json_decode($result, true);
-print_info($arr_result, '$arr_result');
+//print_info($arr_result, '_curl: ' . $command);
 		# Если telegram выдал ошибку
 		if (!$arr_result['ok']) {
 			# Выводим сообщение
@@ -104,7 +104,6 @@ print_info($arr_result, '$arr_result');
 	/** Возвращает объект сообщения */
 	public function msg() {
 		$obj = (new msg\msg())->set_bot($this);
-//		$obj->set_bot($this);
 		return $obj;
 	}
 

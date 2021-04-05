@@ -10,14 +10,17 @@ class getUpdates extends _object_method {
 
 
 	/** Задаёт настройки объекта */
-	protected function set_method() {
+	protected function add_setting() {
 		$this->command = 'getUpdates';
 		$this->class_result = 'Update';
 		$this->array_result = true;
+		$this->set('offset',    'int');
+		$this->set('limit',     'int');
+		$this->set('timeout',   'int');
 	}
 
 
-
+/*
 	public function offset(int $value = null) {
 		$this->_add_post_data(__FUNCTION__, $value);
 		return $this;
@@ -36,7 +39,7 @@ class getUpdates extends _object_method {
 		$this->_add_post_data(__FUNCTION__, $value);
 		return $this;
 	}
-
+/**/
 
 
 /**/

@@ -7,12 +7,12 @@ namespace RusaDrako\telegram_bot_engine\method;
 $class_map = [
 	'_trait__response.php',
 	'_object_method.php',
-	'_send.php',
-	'getFile.php',
+	'send.php',
+//	'getFile.php',
 	'getMe.php',
 	'getUpdates.php',
 	'sendMessage.php',
-	'sendPhoto.php',
+//	'sendPhoto.php',
 ];
 
 

@@ -5,24 +5,100 @@ namespace RusaDrako\telegram_bot_engine\method;
 /**
  *
  */
-class _object_method {
+class _object_method extends \RusaDrako\telegram_bot_engine\object {
 
 	use _trait__response;
-
+/*
 	protected $bot = null;
 
-	protected $post_data = [];
-
+	protected $_data = [];
+*/
 	protected $command = null;
 	protected $class_result = null;
 	protected $array_result = false;
 
 	protected $_required = [];
+/*
+
+	/** * /
+	function __construct() {
+		$this->filter['def'] = function ($v) {return $v;};
+		$this->filter['int'] = function ($v) {return (int)$v;};
+		$this->filter['float'] = function ($v) {return (float)$v;};
+		$this->filter['str'] = function ($v) {return (String)$v;};
+		$this->filter['bool'] = function ($v) {return (bool)$v;};
+		$this->filter['date'] = function ($v) {return date('Y-m-d H:s:i', $v);};
+		$this->filter['true'] = function ($v) {return true;};
+//		$this->_info($this->filter);
+		$this->add_setting();
+	}
+
+
+
+	/** Подготовка данных к var_dump() * /
+	public function __debugInfo() {
+		$arr = $this->__preparationData([]);
+		return $arr;
+	}
 
 
 
 
-	/** */
+
+	/** Задаёт данные, которые должны быть сериализованы в JSON * /
+	public function jsonSerialize() {
+		$arr = $this->__preparationData([]);
+		return $arr;
+	}
+
+
+
+
+
+	/** Подготовка данных к var_dump() и серилизации JSON (JsonSerializable)* /
+	protected function __preparationData($arr) {
+//		$arr['bot'] =$this->bot;
+/*		$arr = [
+			$this->data,
+			$this->obj,
+			$this->arr,
+		];/** /
+//var_dump($this->_data);
+		foreach ($this->_data as $k => $v) {
+			if ($v === null) { continue; }
+			$arr[$k] = $v;
+		}
+/*		if ($this->obj) {
+			foreach ($this->obj as $k => $v) {
+				if ($v === null) { continue; }
+				$arr[$k] = $v;
+			}
+		}
+		if ($this->arr) {
+			foreach ($this->arr as $k => $v) {
+				if ($v === null) { continue; }
+				$arr[$k] = $v;
+			}
+		}
+		if ($this->arr_arr) {
+			foreach ($this->arr_arr as $k => $v) {
+				if ($v === null) { continue; }
+				$arr[$k] = $v;
+			}
+		}* /
+		return $arr;
+	}
+
+
+
+
+	/** /
+	public function met() {
+		return get_class_methods($this);
+	}
+
+
+	/** * /
 	final public function set_bot($bot) {
 		$this->bot = $bot;
 		return $this;
@@ -30,7 +106,7 @@ class _object_method {
 
 
 
-	/** */
+	/** * /
 	protected function _get_post() {
 		$result = [];
 		foreach ($this->post_data as $k => $v) {
@@ -61,7 +137,7 @@ class _object_method {
 
 
 
-	/** Добавляет данные в запрос */
+	/* * Добавляет данные в запрос * /
 	protected function _add_post_data($name, $value) {
 		if ($value === null) {
 			unset($this->post_data[$name]);
@@ -72,7 +148,7 @@ class _object_method {
 
 
 
-	/** Добавляет данные в запрос */
+	/** Добавляет данные в запрос * /
 	protected function _add_post_data_array($name, $value) {
 		if ($value !== null) {
 			$this->post_data[$name][] = $value;
@@ -83,8 +159,8 @@ class _object_method {
 
 	/** Выполняет запрос */
 	final public function execute() {
-		$this->set_method();
-		$post = $this->_get_post();
+//		$this->set_method();
+		$post = $this->__preparationData([]);
 		if (!$this->_control_required($post)) {
 			echo '<pre>';
 			print_r($post);
@@ -102,7 +178,7 @@ class _object_method {
 
 
 	/** Задаёт настройки объекта */
-	protected function set_method() {}
+//	protected function set_method() {}
 
 /**/
 }

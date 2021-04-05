@@ -6,7 +6,7 @@ namespace RusaDrako\telegram_bot_engine;
 
 $class_map = [
 	'telegram_bot.php',
-	'msg/_autoload.php',
+	'object.php',
 	'object/_autoload.php',
 	'method/_autoload.php',
 ];

@@ -10,7 +10,7 @@ class getMe extends _object_method {
 
 
 	/** Задаёт настройки объекта */
-	protected function set_method() {
+	protected function add_setting() {
 		$this->command = 'getMe';
 		$this->class_result = 'User';
 	}
