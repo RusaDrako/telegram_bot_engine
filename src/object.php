@@ -13,6 +13,8 @@ class object implements \JsonSerializable {
 	private $filter = [];
 	private $is_obj = [];
 	private $is_arr_obj = [];
+	private $is_arr_arr_obj = [];
+
 	private $arr_arr = [];
 	private $arr_arr_name = [];
 
@@ -50,20 +52,20 @@ class object implements \JsonSerializable {
 
 
 	/** Формирует namespace для переданного имени класса
-	 * @param String $obj_name Имя класса
+	 * @param string $class_name Имя класса
 	 */
-	final protected function _namespace_object($obj_name) {
+	final protected function _namespace_object($class_name) {
 		# Формируем namespace объекта
 		$arr_namespace = \explode('\\', \get_called_class());
 		# Если нет первого обратного слэша - адрес относительный
-		if ($obj_name[0] != '\\') {
+		if ($class_name[0] != '\\') {
 			# Находим namespace текущего класса
 			array_pop($arr_namespace);
 			$str_namespace = \implode('\\', $arr_namespace);
-			$obj_name = '\\' . $str_namespace . '\\' . $obj_name;
+			$class_name = '\\' . $str_namespace . '\\' . $class_name;
 		}
 
-		return $obj_name;
+		return $class_name;
 	}
 
 
@@ -71,11 +73,12 @@ class object implements \JsonSerializable {
 
 
 	/** Задаём свойство с типовым фильтром
-	 * @param String $name Имя свойства
-	 * @param String $filter Имя фильтра
+	 * @param string $name Имя свойства
+	 * @param string $filter Имя фильтра
 	 */
 	final protected function set($name, $filter = 'def') {
 		$this->_data[$name] = null;
+		# Фильтр
 		$this->_data_filter[$name] = $filter;
 	}
 
@@ -84,15 +87,16 @@ class object implements \JsonSerializable {
 
 
 	/** Задаём свойство с заданным массивом значений
-	 * @param String $name Имя свойства
-	 * @param String $filter Имя фильтра
+	 * @param string $name Имя свойства
+	 * @param string $filter Имя фильтра
 	 */
 	final protected function set_var($name, array $filter = []) {
 		$this->_data[$name] = null;
-
-		$this->_data_filter[$name] = function ($v) use ($filter) {
+		# Фильтр
+		$this->_data_filter[$name] = function ($v) use ($filter, $name) {
 			if (\in_array($v, $filter)) {return $v;}
-			return null;
+			# Ошибонька
+			throw new \Exception("Неверное значение свойства \\" . \get_called_class() . "->{$name}. Должено быть одно из следующих значений: " . \implode(', ', $filter) . ". Передано: " . $v);
 		};
 	}
 
@@ -101,29 +105,27 @@ class object implements \JsonSerializable {
 
 
 	/** Задаём свойство - объект
-	 * @param String $name Имя свойства
-	 * @param String $obj_name Класс объекта
+	 * @param string $name Имя свойства
+	 * @param string $class_name Класс объекта
 	 */
-	final protected function set_obj($name, $obj_name = null) {
+	final protected function set_obj($name, $class_name = null) {
 		$this->_data[$name] = null;
 
-//		$obj_name = $this->_namespace_object($obj_name);
-
-		if (!is_array($obj_name)) {
-			$obj_name = [$obj_name];
+		if (!is_array($class_name)) {
+			$class_name = [$class_name];
 		}
 
-		foreach ($obj_name as $k => $v) {
-			$obj_name[$k] = $this->_namespace_object($v);
+		foreach ($class_name as $k => $v) {
+			$class_name[$k] = $this->_namespace_object($v);
 		}
 
-		$this->is_obj[$name] = $obj_name;
-
-		$this->_data_filter[$name] = function ($v) use ($obj_name, $name) {
+		$this->is_obj[$name] = $class_name;
+		# Фильтр
+		$this->_data_filter[$name] = function ($v) use ($class_name, $name) {
 			# Если имя класса есть в списке
 			if (\in_array('\\' . \get_class($v), $this->is_obj[$name])) {return $v;}
+			# Ошибонька
 			throw new \Exception("Неверный формат свойства \\" . \get_called_class() . "->{$name}. Должен быть объект: " . \implode(', ', $this->is_obj[$name]) . ". Передан: \\" . \get_class($v));
-			return null;
 		};
 	}
 
@@ -132,23 +134,23 @@ class object implements \JsonSerializable {
 
 
 	/** Задаём свойство - массив объектов
-	 * @param String $name Имя свойства
-	 * @param String $obj_name Класс объекта
+	 * @param string $name Имя свойства
+	 * @param string $class_name Класс объекта
 	 */
-	final protected function set_arr($name, $obj_name = null) {
+	final protected function set_arr($name, $class_name = null) {
 		$this->_data[$name] = null;
 
-		if (!is_array($obj_name)) {
-			$obj_name = [$obj_name];
+		if (!is_array($class_name)) {
+			$class_name = [$class_name];
 		}
 
-		foreach ($obj_name as $k => $v) {
-			$obj_name[$k] = $this->_namespace_object($v);
+		foreach ($class_name as $k => $v) {
+			$class_name[$k] = $this->_namespace_object($v);
 		}
 
-		$this->is_arr_obj[$name] = $obj_name;
-
-		$this->_data_filter[$name] = function ($val) use ($obj_name, $name) {
+		$this->is_arr_obj[$name] = $class_name;
+		# Фильтр
+		$this->_data_filter[$name] = function ($val) use ($class_name, $name) {
 			if (!\is_array($val)) {
 				throw new \Exception("Неверный формат свойства \\" . \get_called_class() . "->{$name}. Должен быть массив объектов: " . \implode(', ', $this->is_arr_obj[$name]));
 				return null;
@@ -171,8 +173,7 @@ class object implements \JsonSerializable {
 			}
 			# Если всё нормально - возвращаем результат
 			if ($control) {return $val;};
-print_info($val);
-			# Ошибка
+			# Ошибонька
 			throw new \Exception("Неверный формат свойства " . \get_called_class() . "->{$name}. Элемент массива должен быть объектом: " . \implode(', ', $this->is_arr_obj[$name]) . ". Передан: \\" . \get_class($obj_error));
 		};
 	}
@@ -182,15 +183,15 @@ print_info($val);
 
 
 	/** Задаём свойство - массив массивов объектов
-	 * @param String $name Имя свойства
-	 * @param String $obj_name Класс объекта
+	 * @param string $name Имя свойства
+	 * @param string $class_name Класс объекта
 	 */
-	final protected function set_arr_arr($name, $obj_name = null) {
-		if($obj_name === null) {
-			$obj_name = $name;
+	final protected function set_arr_arr($name, $class_name = null) {
+		if ($class_name === null) {
+			$class_name = $name;
 		}
 		$this->arr_arr[$name] = null;
-		$this->arr_arr_name[$name] = $this->_namespace_object($obj_name);
+		$this->arr_arr_name[$name] = $this->_namespace_object($class_name);
 	}
 
 
@@ -220,20 +221,21 @@ print_info($val);
 				# Проходим по массиву
 				foreach ($v as $k_2 => $v_2) {
 					# Берём первое имя в массиве
-					$obj_name = $this->is_arr_obj[$k][0];
+					$class_name = $this->is_arr_obj[$k][0];
 					# Создаём объект
-					$arr_v[] = $this->_create_object($obj_name, $v_2);
+					$arr_v[] = $this->_create_object($class_name, $v_2);
 				}
 				$v = $arr_v;
 			# Если это просто объект или значение
 			} else {
 				if (\array_key_exists($k, $this->is_obj)) {
 					# Получаем имя объекта
-					$obj_name = $this->is_obj[$k][0];
+					$class_name = $this->is_obj[$k][0];
 					# Создаём объект
-					$v = $this->_create_object($obj_name, $v);
+					$v = $this->_create_object($class_name, $v);
 				}
 			}
+			# Присваеваем значение
 			$this->$k = $v;
 		}
 	}
@@ -243,7 +245,8 @@ print_info($val);
 
 
 	/** Подготовка данных к var_dump() */
-	public function __debugInfo() {
+	final public function __debugInfo() {
+		# Получаем сборку данных (свойства)
 		$arr = $this->__preparationData([]);
 		return $arr;
 	}
@@ -253,7 +256,8 @@ print_info($val);
 
 
 	/** Задаёт данные, которые должны быть сериализованы в JSON */
-	public function jsonSerialize() {
+	final public function jsonSerialize() {
+		# Получаем сборку данных (свойства)
 		$arr = $this->__preparationData([]);
 		return $arr;
 	}
@@ -262,8 +266,9 @@ print_info($val);
 
 
 
-	/** Задаёт данные, которые должны быть сериализованы в JSON */
-	public function existsProp() {
+	/** Возвращает ВСЕ свойства объекта для вывода */
+	final public function existsProp() {
+		# Получаем сборку данных (свойства)
 		$arr = $this->__preparationData([], true);
 		return $arr;
 	}
@@ -272,10 +277,16 @@ print_info($val);
 
 
 
-	/** Подготовка данных к var_dump() и серилизации JSON (JsonSerializable)*/
-	protected function __preparationData($arr, $full = false) {
+	/** Подготовка данных к var_dump() и серилизации JSON (JsonSerializable)
+	 * @param array $arr Входной массив данных
+	 * @param bool $full Маркер вывода всех свойств
+	*/
+	protected function __preparationData($arr, bool $full = false) {
+		# Проходим по всем свойствам
 		foreach ($this->_data as $k => $v) {
+			# Если не надо отображать все свойства
 			if (!$full && $v === null) { continue; }
+			# Добавляем элемент
 			$arr[$k] = $v;
 		}
 		if ($this->arr_arr) {
@@ -284,6 +295,7 @@ print_info($val);
 				$arr[$k] = $v;
 			}
 		}
+		# Возвращаем массив
 		return $arr;
 	}
 
@@ -293,12 +305,15 @@ print_info($val);
 
 	/** */
 	final public function __get($name) {
-		if (array_key_exists($name, $this->_data)) {
+		# Если свойство есть
+		if (\array_key_exists($name, $this->_data)) {
+			# Возвращаем значение
 			return $this->_data[$name];
 		}
-		if (array_key_exists($name, $this->arr_arr)) {
+		if (\array_key_exists($name, $this->arr_arr)) {
 			return $this->arr_arr[$name];
 		}
+		# Ошибонька
 		echo '<pre>';
 		print_r($this->_data);
 		print_r($this->arr_arr);
@@ -311,7 +326,7 @@ print_info($val);
 
 	/** */
 	final public function __set($name, $value) {
-		if (array_key_exists($name, $this->_data)) {
+		if (\array_key_exists($name, $this->_data)) {
 			# Если передан null в свойство
 			if ($value === null) {
 				# Просто обнуляем свойство
@@ -323,14 +338,15 @@ print_info($val);
 			# Если это функция
 			if (\is_callable($filter_name)) {
 				$filter = $filter_name;
-			# Иначе строка
+			# Иначе строка - имя фильтра
 			} else {
 				$filter = $this->filter[$filter_name];
 			}
+			# Выполняем фильтр и записываем результат
 			$this->_data[$name] = $filter($value);
 			return;
 		}
-		if (array_key_exists($name, $this->arr_arr)) {
+		if (\array_key_exists($name, $this->arr_arr)) {
 			if ($this->arr_arr[$name] === null) {
 				$class_name = $this->arr_arr_name[$name];
 			}
@@ -343,6 +359,7 @@ print_info($val);
 			}
 			return;
 		}
+		# Ошибонька
 		echo '<pre>';
 		print_r($this->_data);
 		print_r($this->arr_arr);
