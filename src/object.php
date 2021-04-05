@@ -13,8 +13,7 @@ class object implements \JsonSerializable {
 //	private $_data_var = [];
 //	private $_data_var_filter = [];
 	private $filter = [];
-	private $obj = [];
-	private $obj_name = [];
+	private $is_obj = [];
 	private $arr = [];
 	private $arr_name = [];
 	private $arr_arr = [];
@@ -27,13 +26,13 @@ class object implements \JsonSerializable {
 	/** Конструктор объекта */
 	function __construct() {
 		# Задаём филтьтры
-		$this->filter['def'] = function ($v) {return $v;};
-		$this->filter['int'] = function ($v) {return (int)$v;};
-		$this->filter['float'] = function ($v) {return (float)$v;};
-		$this->filter['str'] = function ($v) {return (String)$v;};
-		$this->filter['bool'] = function ($v) {return (bool)$v;};
-		$this->filter['date'] = function ($v) {return date('Y-m-d H:s:i', $v);};
-		$this->filter['true'] = function ($v) {return true;};
+		$this->filter['def']     = function ($v) {return $v;};
+		$this->filter['int']     = function ($v) {return (int)$v;};
+		$this->filter['float']   = function ($v) {return (float)$v;};
+		$this->filter['str']     = function ($v) {return (String)$v;};
+		$this->filter['bool']    = function ($v) {return (bool)$v;};
+		$this->filter['date']    = function ($v) {return date('Y-m-d H:s:i', $v);};
+		$this->filter['true']    = function ($v) {return true;};
 		# Добавляем настройки
 		$this->add_setting();
 	}
@@ -41,7 +40,8 @@ class object implements \JsonSerializable {
 
 
 	/** Задаём объект бота */
-	final public function set_bot(\RusaDrako\telegram_bot_engine\telegram_bot $bot) {
+//--	final public function set_bot(\RusaDrako\telegram_bot_engine\telegram_bot $bot) {
+	final public function set_bot($bot) {
 		$this->bot = $bot;
 		return $this;
 	}
@@ -67,12 +67,32 @@ class object implements \JsonSerializable {
 	 */
 	final protected function set_var($name, array $filter = []) {
 		$this->_data[$name] = null;
-//		$this->_data_var_filter[$name] = $filter;
+
 		$this->_data_filter[$name] = function ($v) use ($filter) {
-//			echo 456;
 			if (\in_array($v, $filter)) {return $v;}
 			return null;
 		};
+	}
+
+
+
+
+
+	/** Формирует namespace для переданного имени класса
+	 * @param String $obj_name Имя класса
+	 */
+	final protected function _namespace_object($obj_name) {
+		# Формируем namespace объекта
+		$arr_namespace = \explode('\\', \get_called_class());
+		# Если нет первого обратного слэша - адрес относительный
+		if ($arr_namespace[0] != '') {
+			# Находим namespace текущего класса
+			array_pop($arr_namespace);
+			$str_namespace = \implode('\\', $arr_namespace);
+			$obj_name = $str_namespace . '\\' . $obj_name;
+		}
+
+		return $obj_name;
 	}
 
 
@@ -84,12 +104,16 @@ class object implements \JsonSerializable {
 	 * @param String $obj_name Класс объекта
 	 */
 	final protected function set_obj($name, $obj_name = null) {
-		if($obj_name === null) {
-			$obj_name = $name;
-		}
-		$obj_name = __NAMESPACE__ . '\\object\\' . $obj_name;
-		$this->obj[$name] = null;
-		$this->obj_name[$name] = $obj_name;
+		$this->_data[$name] = null;
+
+		$obj_name = $this->_namespace_object($obj_name);
+
+		$this->is_obj[$name] = $obj_name;
+
+		$this->_data_filter[$name] = function ($v) use ($obj_name) {
+			if (\is_a($v, $obj_name)) {return $v;}
+			return null;
+		};
 	}
 
 
@@ -104,9 +128,8 @@ class object implements \JsonSerializable {
 		if($obj_name === null) {
 			$obj_name = $name;
 		}
-		$obj_name = __NAMESPACE__ . '\\object\\' . $obj_name;
 		$this->arr[$name] = null;
-		$this->arr_name[$name] = $obj_name;
+		$this->arr_name[$name] = $this->_namespace_object($obj_name);
 	}
 
 
@@ -121,9 +144,8 @@ class object implements \JsonSerializable {
 		if($obj_name === null) {
 			$obj_name = $name;
 		}
-		$obj_name = __NAMESPACE__ . '\\object\\' . $obj_name;
 		$this->arr_arr[$name] = null;
-		$this->arr_arr_name[$name] = $obj_name;
+		$this->arr_arr_name[$name] = $this->_namespace_object($obj_name);
 	}
 
 
@@ -133,6 +155,13 @@ class object implements \JsonSerializable {
 	/** Присвоение массива свойств */
 	final public function set_data($array) {
 		foreach ($array as $k => $v) {
+			# Если это должен быть объект
+			if (\array_key_exists($k, $this->is_obj)) {
+				$obj_name = $this->is_obj[$k];
+				$obj = new $obj_name();
+				$obj->set_data($v);
+				$v = $obj;
+			}
 			$this->$k = $v;
 		}
 	}
@@ -173,26 +202,9 @@ class object implements \JsonSerializable {
 
 	/** Подготовка данных к var_dump() и серилизации JSON (JsonSerializable)*/
 	protected function __preparationData($arr, $full = false) {
-//		$arr['bot'] =$this->bot;
-/*		$arr = [
-			$this->data,
-			$this->obj,
-			$this->arr,
-		];/**/
-//var_dump($this->_data);
 		foreach ($this->_data as $k => $v) {
 			if (!$full && $v === null) { continue; }
 			$arr[$k] = $v;
-		}
-/*		foreach ($this->_data_var as $k => $v) {
-			if (!$full && $v === null) { continue; }
-			$arr[$k] = $v;
-		}/**/
-		if ($this->obj) {
-			foreach ($this->obj as $k => $v) {
-				if (!$full && $v === null) { continue; }
-				$arr[$k] = $v;
-			}
 		}
 		if ($this->arr) {
 			foreach ($this->arr as $k => $v) {
@@ -218,12 +230,6 @@ class object implements \JsonSerializable {
 		if (array_key_exists($name, $this->_data)) {
 			return $this->_data[$name];
 		}
-/*		if (array_key_exists($name, $this->_data_var)) {
-			return $this->_data_var[$name];
-		}/**/
-		if (array_key_exists($name, $this->obj)) {
-			return $this->obj[$name];
-		}
 		if (array_key_exists($name, $this->arr)) {
 			return $this->arr[$name];
 		}
@@ -233,10 +239,7 @@ class object implements \JsonSerializable {
 		echo '<pre>';
 		print_r($this->_data);
 		print_r($this->_data_var);
-		print_r($this->obj);
-//		print_r($this->obj_name);
 		print_r($this->arr);
-//		print_r($this->arr_name);
 		throw new \Exception("Вызов неизвестного свойства объекта: " . \get_called_class() . "->{$name}");
 	}
 
@@ -263,24 +266,6 @@ class object implements \JsonSerializable {
 			$this->_data[$name] = $filter($value);
 			return;
 		}
-/*		if (array_key_exists($name, $this->_data_var)) {
-			if (\array_key_exists($value, $this->_data_var_filter[$name])) {
-				$this->_data_var[$name] = $filter($value);
-			} else {
-				$this->_data_var[$name] = NULL;
-			}
-			return;
-		}/**/
-		if (array_key_exists($name, $this->obj)) {
-			$obj = $this->obj[$name];
-			if ($obj === null) {
-				$class_name = $this->obj_name[$name];
-				$this->obj[$name] = (new $class_name())->set_bot($this->bot);
-//				$this->obj[$name]->set_bot($this->bot);
-			}
-			$this->obj[$name]->set_data($value);
-			return;
-		}
 		if (array_key_exists($name, $this->arr)) {
 			if ($this->arr[$name] === null) {
 				$class_name = $this->arr_name[$name];
@@ -297,7 +282,6 @@ class object implements \JsonSerializable {
 			if ($this->arr_arr[$name] === null) {
 				$class_name = $this->arr_arr_name[$name];
 			}
-//print_info($this->arr_arr_name[$name], '$name');
 			foreach($value as $k => $v) {
 				foreach($v as $k_2 => $v_2) {
 					$obj = (new $class_name())->set_bot($this->bot);
@@ -310,20 +294,9 @@ class object implements \JsonSerializable {
 		}
 		echo '<pre>';
 		print_r($this->_data);
-		print_r($this->obj);
-//		print_r($this->obj_name);
 		print_r($this->arr);
 //		print_r($this->arr_name);/**/
 		throw new \Exception("Вызов неизвестного свойства объекта: " . \get_called_class() . "->{$name}");
-	}
-
-
-
-
-
-	/** Фильтр информации */
-	protected function filter($name, $value) {
-		return $value;
 	}
 
 
