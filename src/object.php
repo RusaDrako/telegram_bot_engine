@@ -10,8 +10,8 @@ class object implements \JsonSerializable {
 	protected $bot = null;
 	private $_data = [];
 	private $_data_filter = [];
-	private $_data_var = [];
-	private $_data_var_filter = [];
+//	private $_data_var = [];
+//	private $_data_var_filter = [];
 	private $filter = [];
 	private $obj = [];
 	private $obj_name = [];
@@ -66,8 +66,13 @@ class object implements \JsonSerializable {
 	 * @param String $filter Имя фильтра
 	 */
 	final protected function set_var($name, array $filter = []) {
-		$this->_data_var[$name] = null;
-		$this->_data_var_filter[$name] = $filter;
+		$this->_data[$name] = null;
+//		$this->_data_var_filter[$name] = $filter;
+		$this->_data_filter[$name] = function ($v) use ($filter) {
+//			echo 456;
+			if (\in_array($v, $filter)) {return $v;}
+			return null;
+		};
 	}
 
 
@@ -179,10 +184,10 @@ class object implements \JsonSerializable {
 			if (!$full && $v === null) { continue; }
 			$arr[$k] = $v;
 		}
-		foreach ($this->_data_var as $k => $v) {
+/*		foreach ($this->_data_var as $k => $v) {
 			if (!$full && $v === null) { continue; }
 			$arr[$k] = $v;
-		}
+		}/**/
 		if ($this->obj) {
 			foreach ($this->obj as $k => $v) {
 				if (!$full && $v === null) { continue; }
@@ -213,9 +218,9 @@ class object implements \JsonSerializable {
 		if (array_key_exists($name, $this->_data)) {
 			return $this->_data[$name];
 		}
-		if (array_key_exists($name, $this->_data_var)) {
+/*		if (array_key_exists($name, $this->_data_var)) {
 			return $this->_data_var[$name];
-		}
+		}/**/
 		if (array_key_exists($name, $this->obj)) {
 			return $this->obj[$name];
 		}
@@ -242,28 +247,30 @@ class object implements \JsonSerializable {
 	/** */
 	final public function __set($name, $value) {
 		if (array_key_exists($name, $this->_data)) {
-//			$value = $this->filter($name, $value);
-//			print_r($name);
-//			print_r($value);
-//			print_r($this->_data_filter[$name]);
-//			print_r($this->filter);
+			if ($value === null) {
+				$this->_data[$name] = null;
+				return;
+			}
+			# Фильтр
 			$filter_name = $this->_data_filter[$name];
-			$filter = $this->filter[$filter_name];
-//echo \get_called_class() . ' - ';
-//echo $name . ' - ';
-//var_dump($value);
-//echo '<br>';
+			# Если это функция
+			if (\is_callable($filter_name)) {
+				$filter = $filter_name;
+			# Иначе строка
+			} else {
+				$filter = $this->filter[$filter_name];
+			}
 			$this->_data[$name] = $filter($value);
 			return;
 		}
-		if (array_key_exists($name, $this->_data_var)) {
+/*		if (array_key_exists($name, $this->_data_var)) {
 			if (\array_key_exists($value, $this->_data_var_filter[$name])) {
 				$this->_data_var[$name] = $filter($value);
 			} else {
 				$this->_data_var[$name] = NULL;
 			}
 			return;
-		}
+		}/**/
 		if (array_key_exists($name, $this->obj)) {
 			$obj = $this->obj[$name];
 			if ($obj === null) {
